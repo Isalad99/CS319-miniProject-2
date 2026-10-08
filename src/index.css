@@ -1,0 +1,40 @@
+/* Google Fonts — must be first @import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+@plugin "daisyui";
+
+/* Custom theme: movierating */
+@plugin "daisyui/theme" {
+  name: "movierating";
+  default: true;
+  color-scheme: "light";
+
+  /* Semantic Colors */
+  --color-primary: #4E220F;          /* Dark brown (header) */
+  --color-primary-content: #F7F1DE;  /* Light text on primary */
+  --color-secondary: #9D6638;        /* Medium brown (footer) */
+  --color-secondary-content: #F7F1DE;
+  --color-accent: #B0BA99;           /* Sage green (sidebar/tabs) */
+  --color-accent-content: #3D1F0E;
+  --color-neutral: #3D1F0E;          /* Darker brown for text */
+  --color-neutral-content: #F7F1DE;
+  --color-base-100: #F7F1DE;         /* Warm cream (background) */
+  --color-base-200: #EDE5CB;         /* Slightly darker cream */
+  --color-base-300: #E0D5B0;         /* Card backgrounds */
+  --color-base-content: #3D1F0E;     /* Default text color */
+  --color-info: #7B9EA8;             /* Muted blue */
+  --color-success: #8FB339;          /* Olive green */
+  --color-warning: #E6A817;          /* Warm amber */
+  --color-error: #C23028;            /* Brick red */
+
+  /* Component Border Radius */
+  --radius-selector: 1rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --border: 1px;
+}
+
+* {
+  font-family: 'Inter', sans-serif;
+}
