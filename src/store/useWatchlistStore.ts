@@ -1,44 +1,49 @@
 // src/store/useWatchlistStore.ts
+// Client state only: collection of imdbIds the user saved.
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-interface WatchlistItem {
-  imdbId: string    // PK
-  title: string
-  poster: string
-  year: string
-  addedAt: string   // ISO 8601 timestamp
+export interface WatchlistEntry {
+  addedAt: string // ISO 8601
 }
 
-interface WatchlistStore {
-  // State — Record<imdbId, WatchlistItem>
-  watchlist: Record<string, WatchlistItem>
+export interface WatchlistState {
+  watchlist: Record<string, WatchlistEntry>
+}
 
-  // Actions
-  addToWatchlist: (item: WatchlistItem) => void
+export interface WatchlistActions {
+  addToWatchlist: (imdbId: string) => void
   removeFromWatchlist: (imdbId: string) => void
-  isInWatchlist: (imdbId: string) => boolean
+  toggleWatchlist: (imdbId: string) => void
 }
+
+export type WatchlistStore = WatchlistState & WatchlistActions
 
 export const useWatchlistStore = create<WatchlistStore>()(
   persist(
     (set, get) => ({
       watchlist: {},
 
-      addToWatchlist: (item) =>
+      addToWatchlist: (imdbId) =>
         set((state) => ({
-          watchlist: { ...state.watchlist, [item.imdbId]: item },
+          watchlist: {
+            ...state.watchlist,
+            [imdbId]: { addedAt: new Date().toISOString() },
+          },
         })),
 
       removeFromWatchlist: (imdbId) =>
         set((state) => {
-          const { [imdbId]: _removed, ...rest } = state.watchlist
+          const rest = { ...state.watchlist }
+          delete rest[imdbId]
           return { watchlist: rest }
         }),
 
-      isInWatchlist: (imdbId) =>
-        imdbId in get().watchlist,
+      toggleWatchlist: (imdbId) => {
+        if (imdbId in get().watchlist) get().removeFromWatchlist(imdbId)
+        else get().addToWatchlist(imdbId)
+      },
     }),
-    { name: 'movie-watchlist' }   // localStorage key
+    { name: 'movie-watchlist-v2' }
   )
 )

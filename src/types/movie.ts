@@ -46,3 +46,9 @@ export interface OmdbSearchItem {
   Type: string
   Poster: string
 }
+
+/** Fields needed to render a movie in a card (shared by detail + search results) */
+export type MovieSummary = Pick<OmdbMovieDetail, 'Title' | 'Year' | 'Poster' | 'imdbID'>
+
+/** OMDb plot length option */
+export type OmdbPlotLength = 'short' | 'full'

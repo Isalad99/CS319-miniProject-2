@@ -2,16 +2,21 @@
 import { useSearchParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import { searchMovies } from '../lib/api'
+import type { OmdbSearchResponse } from '../types/movie'
 import MovieCard from '../components/MovieCard'
 import SkeletonCard from '../components/SkeletonCard'
-import type { OmdbMovieDetail, OmdbSearchItem } from '../types/movie'
+import ErrorState from '../components/ErrorState'
+import type { OmdbSearchItem } from '../types/movie'
 
 export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const query = searchParams.get('q') ?? ''
   const page = Number(searchParams.get('page') ?? '1')
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch, isFetching } = useQuery<
+    OmdbSearchResponse,
+    Error
+  >({
     queryKey: ['search', query, page],
     queryFn: () => searchMovies(query, page),
     enabled: query.trim().length > 0,
@@ -54,9 +59,11 @@ export default function SearchPage() {
 
       {/* Error state */}
       {isError && (
-        <div className="alert alert-error shadow-sm">
-          <span>{(error as Error).message ?? 'ค้นหาไม่สำเร็จ กรุณาลองใหม่'}</span>
-        </div>
+        <ErrorState
+          message={error.message || 'ค้นหาไม่สำเร็จ กรุณาลองใหม่'}
+          onRetry={() => void refetch()}
+          isRetrying={isFetching}
+        />
       )}
 
       {/* Grid */}
@@ -64,10 +71,7 @@ export default function SearchPage() {
         {isLoading
           ? Array.from({ length: 10 }).map((_, i) => <SkeletonCard key={i} />)
           : data?.Search.map((item: OmdbSearchItem) => (
-              <MovieCard
-                key={item.imdbID}
-                movie={item as unknown as OmdbMovieDetail}
-              />
+              <MovieCard key={item.imdbID} movie={item} />
             ))}
       </div>
 

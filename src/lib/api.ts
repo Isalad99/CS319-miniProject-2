@@ -1,11 +1,16 @@
 // src/lib/api.ts
-import type { OmdbMovieDetail, OmdbSearchResponse } from '../types/movie'
+import type { OmdbMovieDetail, OmdbPlotLength, OmdbSearchResponse } from '../types/movie'
 
 const BASE_URL = 'https://www.omdbapi.com'
 const API_KEY = import.meta.env.VITE_OMDB_API_KEY as string
 
-export async function fetchMovieById(imdbId: string): Promise<OmdbMovieDetail> {
-  const res = await fetch(`${BASE_URL}/?apikey=${API_KEY}&i=${imdbId}&plot=short`)
+export async function fetchMovieById(
+  imdbId: string,
+  plot: OmdbPlotLength = 'short'
+): Promise<OmdbMovieDetail> {
+  const res = await fetch(
+    `${BASE_URL}/?apikey=${API_KEY}&i=${encodeURIComponent(imdbId)}&plot=${plot}`
+  )
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   const data = (await res.json()) as OmdbMovieDetail
   if (data.Response === 'False') throw new Error(data.Error ?? 'Movie not found')
