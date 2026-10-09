@@ -1,44 +1,45 @@
 // src/store/useRatingStore.ts
+// Client state only: the user's own rating, keyed by imdbId.
+// Movie title/poster etc. are server data → fetched via TanStack Query, never duplicated here.
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-interface MovieRating {
-  imdbId: string      // PK — foreign key ไปยัง OMDb
-  title: string       // cache title ไว้แสดงผลใน My Ratings
-  poster: string      // cache poster URL
-  userRating: number  // 1-5 (star rating)
-  ratedAt: string     // ISO 8601 timestamp
+export interface UserRating {
+  userRating: number // 1-5
+  ratedAt: string // ISO 8601
 }
 
-interface RatingStore {
-  // State — Record<imdbId, MovieRating>
-  ratings: Record<string, MovieRating>
+export interface RatingState {
+  ratings: Record<string, UserRating>
+}
 
-  // Actions
-  setRating: (movie: MovieRating) => void
+export interface RatingActions {
+  setRating: (imdbId: string, userRating: number) => void
   removeRating: (imdbId: string) => void
-  getRating: (imdbId: string) => number | null
 }
+
+export type RatingStore = RatingState & RatingActions
 
 export const useRatingStore = create<RatingStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       ratings: {},
 
-      setRating: (movie) =>
+      setRating: (imdbId, userRating) =>
         set((state) => ({
-          ratings: { ...state.ratings, [movie.imdbId]: movie },
+          ratings: {
+            ...state.ratings,
+            [imdbId]: { userRating, ratedAt: new Date().toISOString() },
+          },
         })),
 
       removeRating: (imdbId) =>
         set((state) => {
-          const { [imdbId]: _removed, ...rest } = state.ratings
+          const rest = { ...state.ratings }
+          delete rest[imdbId]
           return { ratings: rest }
         }),
-
-      getRating: (imdbId) =>
-        get().ratings[imdbId]?.userRating ?? null,
     }),
-    { name: 'movie-ratings' }   // localStorage key
+    { name: 'movie-ratings-v2' }
   )
 )

@@ -1,9 +1,8 @@
 // src/pages/HomePage.tsx
 import { useFeaturedMovies } from '../hooks/useFeaturedMovies'
-import { FEATURED_MOVIES } from '../data/featuredMovies'
 import MovieCard from '../components/MovieCard'
 import SkeletonCard from '../components/SkeletonCard'
-import type { OmdbMovieDetail } from '../types/movie'
+import ErrorState from '../components/ErrorState'
 
 export default function HomePage() {
   const movieQueries = useFeaturedMovies()
@@ -11,12 +10,7 @@ export default function HomePage() {
   const isLoading = movieQueries.some((q) => q.isPending)
   const hasError = movieQueries.some((q) => q.isError)
 
-  const moviesWithMeta = movieQueries
-    .map((q, i) => ({
-      query: q,
-      imdbId: FEATURED_MOVIES[i]?.imdbId ?? '',
-    }))
-    .filter((m) => m.query.isSuccess && m.query.data)
+  const movies = movieQueries.flatMap((q) => (q.isSuccess ? [q.data] : []))
 
   return (
     <div className="space-y-4">
@@ -27,19 +21,20 @@ export default function HomePage() {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
         {isLoading
           ? Array.from({ length: 25 }).map((_, i) => <SkeletonCard key={i} />)
-          : moviesWithMeta.map(({ query, imdbId }) => (
-              <MovieCard
-                key={imdbId}
-                movie={query.data as OmdbMovieDetail}
-              />
-            ))}
+          : movies.map((movie) => <MovieCard key={movie.imdbID} movie={movie} />)}
       </div>
 
       {/* Error fallback */}
       {hasError && (
-        <div className="alert alert-error shadow-sm">
-          <span>บางรายการโหลดไม่สำเร็จ</span>
-        </div>
+        <ErrorState
+          message="บางรายการโหลดไม่สำเร็จ"
+          isRetrying={movieQueries.some((q) => q.isFetching)}
+          onRetry={() =>
+            movieQueries.forEach((q) => {
+              if (q.isError) void q.refetch()
+            })
+          }
+        />
       )}
     </div>
   )
