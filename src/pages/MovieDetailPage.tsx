@@ -1,11 +1,10 @@
-// src/pages/MovieDetailPage.tsx
 import { Link, useParams } from "react-router";
 import { useMovie } from "../hooks/useMovie";
 import { useRatingStore } from "../store/useRatingStore";
 import { useWatchlistStore } from "../store/useWatchlistStore";
-import StarRating from "../components/StarRating";
 import ErrorState from "../components/ErrorState";
 import MovieDetailSkeleton from "../components/MovieDetailSkeleton";
+import ReviewSection from "../components/ReviewSection";
 import type { OmdbMovieDetail } from "../types/movie";
 
 const NO_POSTER = "https://placehold.co/400x600/B0BA99/3D1F0E?text=No+Poster";
@@ -98,26 +97,6 @@ function MovieDetailContent({ movie }: MovieDetailContentProps) {
         aria-label="การให้คะแนนและรายการโปรด"
         className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8"
       >
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-xs font-semibold text-base-content/60">
-            คะแนนของฉัน
-          </span>
-          <StarRating
-            size="lg"
-            value={myRating}
-            onChange={(v) => setRating(movie.imdbID, v)}
-          />
-          {myRating > 0 && (
-            <button
-              type="button"
-              className="btn btn-ghost btn-xs text-base-content/60"
-              onClick={() => removeRating(movie.imdbID)}
-            >
-              ลบคะแนน
-            </button>
-          )}
-        </div>
-
         <button
           type="button"
           className={`btn btn-sm ${inWatchlist ? "btn-secondary" : "btn-outline btn-secondary"}`}
@@ -180,6 +159,9 @@ function MovieDetailContent({ movie }: MovieDetailContentProps) {
           />
         </dl>
       </section>
+
+      {/* User reviews */}
+      <ReviewSection imdbId={movie.imdbID} />
     </article>
   );
 }
