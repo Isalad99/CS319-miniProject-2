@@ -67,7 +67,7 @@ export default function ReviewForm({ imdbId }: Props) {
             value={authorName}
             maxLength={AUTHOR_MAX_LENGTH}
             onChange={(e) => setAuthorName(e.target.value)}
-            placeholder="เช่น Movie Lover"
+            placeholder="เช่น I love Potatoes"
             className="input input-sm w-full bg-base-100"
             disabled={isPending}
           />

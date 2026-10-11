@@ -1,10 +1,9 @@
-import { useReviews, useToggleLike } from "../hooks/useReviews";
-import { useReviewStore } from "../store/useReviewStore";
+import { useReviews } from "../hooks/useReviews";
+
 import ReviewForm from "./ReviewForm";
 import ReviewItem from "./ReviewItem";
 import ReviewSkeleton from "./ReviewSkeleton";
 import ErrorState from "./ErrorState";
-import type { Review } from "../types/review";
 
 interface Props {
   imdbId: string;
@@ -39,7 +38,7 @@ export default function ReviewSection({ imdbId }: Props) {
 
       {data && data.length === 0 && (
         <p className="py-8 text-center text-sm text-base-content/60">
-          ยังไม่มีรีวิว — เป็นคนแรกที่รีวิวหนังเรื่องนี้เลย
+          คุณยังไม่เคยรีวิว
         </p>
       )}
 

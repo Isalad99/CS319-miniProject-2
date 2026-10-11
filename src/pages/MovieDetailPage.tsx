@@ -1,6 +1,5 @@
 import { Link, useParams } from "react-router";
 import { useMovie } from "../hooks/useMovie";
-import { useRatingStore } from "../store/useRatingStore";
 import { useWatchlistStore } from "../store/useWatchlistStore";
 import ErrorState from "../components/ErrorState";
 import MovieDetailSkeleton from "../components/MovieDetailSkeleton";
@@ -34,12 +33,6 @@ interface MovieDetailContentProps {
 }
 
 function MovieDetailContent({ movie }: MovieDetailContentProps) {
-  // Selectors subscribe to only the slice they need (re-render on change)
-  const myRating = useRatingStore(
-    (s) => s.ratings[movie.imdbID]?.userRating ?? 0,
-  );
-  const setRating = useRatingStore((s) => s.setRating);
-  const removeRating = useRatingStore((s) => s.removeRating);
   const inWatchlist = useWatchlistStore((s) => movie.imdbID in s.watchlist);
   const toggleWatchlist = useWatchlistStore((s) => s.toggleWatchlist);
 

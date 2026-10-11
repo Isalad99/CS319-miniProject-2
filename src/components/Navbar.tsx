@@ -1,22 +1,23 @@
 // src/components/Navbar.tsx
-import { Link, useNavigate, useSearchParams } from 'react-router'
-import { useState, useEffect, type FormEvent } from 'react'
+import { Link, useNavigate, useSearchParams } from "react-router";
+import { useState, useEffect, type FormEvent } from "react";
+import UserIcon from "./UserIcon";
 
 export default function Navbar() {
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
-  const [query, setQuery] = useState(searchParams.get('q') ?? '')
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("q") ?? "");
 
   // Sync input when URL ?q changes (e.g. navigating back)
   useEffect(() => {
-    setQuery(searchParams.get('q') ?? '')
-  }, [searchParams])
+    setQuery(searchParams.get("q") ?? "");
+  }, [searchParams]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    const trimmed = query.trim()
-    if (!trimmed) return
-    navigate(`/search?q=${encodeURIComponent(trimmed)}`)
+    e.preventDefault();
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    navigate(`/search?q=${encodeURIComponent(trimmed)}`);
   }
 
   return (
@@ -32,14 +33,18 @@ export default function Navbar() {
           🥔
         </div>
         <span className="text-xs font-black leading-tight uppercase tracking-wide">
-          Fresh<br />Potatoes
+          Fresh
+          <br />
+          Potatoes
         </span>
       </Link>
 
       {/* Search bar */}
       <form onSubmit={handleSubmit} className="flex-1 max-w-xl">
-        <label className="input input-sm bg-base-100/10 border-primary-content/30 text-primary-content
-          placeholder:text-primary-content/50 w-full flex items-center gap-2 rounded-full">
+        <label
+          className="input input-sm bg-base-100/10 border-primary-content/30 text-primary-content
+          placeholder:text-primary-content/50 w-full flex items-center gap-2 rounded-full"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4 opacity-60 shrink-0"
@@ -79,25 +84,18 @@ export default function Navbar() {
         <button
           id="navbar-profile"
           className="w-8 h-8 rounded-full bg-primary-content/20 flex items-center justify-center
-            hover:bg-primary-content/30 transition-colors"
+    hover:bg-primary-content/30 transition-colors"
           title="Profile (mock)"
           aria-label="Profile"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 opacity-80"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-          </svg>
+          <UserIcon className="h-5 w-5 opacity-80" />
         </button>
 
         {/* 3-dot menu — mock only */}
         <button
           id="navbar-more"
           className="w-8 h-8 rounded-full flex items-center justify-center
-            hover:bg-primary-content/20 transition-colors"
+    hover:bg-primary-content/20 transition-colors"
           title="More (mock)"
           aria-label="More options"
         >
@@ -114,5 +112,5 @@ export default function Navbar() {
         </button>
       </div>
     </header>
-  )
+  );
 }
