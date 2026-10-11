@@ -8,7 +8,6 @@ import type { OmdbMovieDetail } from "../types/movie";
 
 const NO_POSTER = "https://placehold.co/400x600/B0BA99/3D1F0E?text=No+Poster";
 
-/** OMDb returns "N/A" for missing fields */
 function valueOrNull(v: string | undefined): string | null {
   return v && v !== "N/A" ? v : null;
 }
