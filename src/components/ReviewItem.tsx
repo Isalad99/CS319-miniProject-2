@@ -2,7 +2,6 @@ import RatingDisplay from "./RatingDisplay";
 import UserIcon from "./UserIcon";
 import type { Review } from "../types/review";
 
-/** "เมื่อสักครู่", "5 นาทีที่ผ่านมา", "1 เดือนที่ผ่านมา" … */
 export function timeAgo(iso: string, now: number = Date.now()): string {
   const seconds = Math.max(
     0,
@@ -41,26 +40,17 @@ interface Props {
 export default function ReviewItem({ review }: Props) {
   const when = timeAgo(review.createdAt);
 
-  if (!review.content) {
-    return (
-      <li className="flex flex-wrap items-center gap-x-3 gap-y-1 px-1 sm:px-4 text-xs text-base-content/60">
-        <Avatar />
-        <span className="font-semibold text-base-content/70 break-all">
-          {review.author}
-        </span>
-        <RatingDisplay value={review.rating} />
-        <time dateTime={review.createdAt}>{when}</time>
-      </li>
-    );
-  }
-
   return (
     <li className="rounded-box border border-base-300 bg-base-100 p-4">
-      <p className="text-sm sm:text-base font-thin text-base-content whitespace-pre-line break-words">
-        {review.content}
-      </p>
+      {review.content && (
+        <p className="text-sm sm:text-base font-thin text-base-content whitespace-pre-line break-words">
+          {review.content}
+        </p>
+      )}
 
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+      <div
+        className={`${review.content ? "mt-3" : ""} flex flex-wrap items-center justify-between gap-x-4 gap-y-2`}
+      >
         <div>
           {review.rating > 0 && <RatingDisplay value={review.rating} />}
         </div>

@@ -69,32 +69,34 @@ function MemberCard({ member }: { member: Member }) {
 
 export default function AboutPage() {
   return (
-    <div className="max-w-5xl mx-auto">
-      <Link to="/" className="text-xs hover:underline">
+    <div className="space-y-4">
+      <Link to="/" className="btn btn-ghost btn-sm text-base-content/70 -ml-2">
         ← กลับหน้าหลัก
       </Link>
 
-      <header className="text-center mt-8 mb-6">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-neutral/80">
-          OMDb api
-        </h1>
-        <a
-          href="https://www.omdbapi.com/"
-          target="_blank"
-          rel="noreferrer"
-          className="inline-block mt-4 text-sm font-medium underline"
-        >
-          https://www.omdbapi.com/
-        </a>
-      </header>
+      <div className="max-w-5xl mx-auto">
+        <header className="text-center mt-4 mb-6">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-neutral/80">
+            OMDb api
+          </h1>
+          <a
+            href="https://www.omdbapi.com/"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-block mt-4 text-sm font-medium underline"
+          >
+            https://www.omdbapi.com/
+          </a>
+        </header>
 
-      <hr className="border-neutral/70 mb-8" />
+        <hr className="border-neutral/70 mb-8" />
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-        {members.map((m) => (
-          <MemberCard key={m.studentId} member={m} />
-        ))}
-      </section>
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {members.map((m) => (
+            <MemberCard key={m.studentId} member={m} />
+          ))}
+        </section>
+      </div>
     </div>
   );
 }
