@@ -1,17 +1,15 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import StarRating from "./StarRating";
-import { useCreateReview } from "../hooks/useReviews";
+import { useCreateReview, useReviews } from "../hooks/useReviews";
 import { useReviewStore } from "../store/useReviewStore";
 import { useRatingStore } from "../store/useRatingStore";
-import { AUTHOR_MAX_LENGTH, REVIEW_MAX_LENGTH } from "../lib/reviewsApi";
+import { REVIEW_MAX_LENGTH } from "../lib/reviewsApi";
 
 interface Props {
   imdbId: string;
 }
 
 export default function ReviewForm({ imdbId }: Props) {
-  const authorName = useReviewStore((s) => s.authorName);
-  const setAuthorName = useReviewStore((s) => s.setAuthorName);
   const draft = useReviewStore((s) => s.drafts[imdbId] ?? "");
   const setDraft = useReviewStore((s) => s.setDraft);
   const clearDraft = useReviewStore((s) => s.clearDraft);
@@ -21,17 +19,17 @@ export default function ReviewForm({ imdbId }: Props) {
   const [rating, setRating] = useState<number>(myRating);
   const { mutate, isPending, isError, error, reset } = useCreateReview(imdbId);
 
-  const trimmedName = authorName.trim();
+  // ครั้งที่เขียนรีวิวของหนังเรื่องนี้ = จำนวนรีวิวที่มีอยู่แล้ว + 1
+  const { data: reviews, isLoading: isLoadingReviews } = useReviews(imdbId);
+  const reviewNumber = (reviews?.length ?? 0) + 1;
+
   const trimmedDraft = draft.trim();
-  const canSubmit =
-    trimmedName.length > 0 &&
-    (trimmedDraft.length > 0 || rating > 0) &&
-    !isPending;
+  const canSubmit = (trimmedDraft.length > 0 || rating > 0) && !isPending;
 
   function submit() {
     if (!canSubmit) return;
     mutate(
-      { imdbId, author: trimmedName, content: trimmedDraft, rating },
+      { imdbId, content: trimmedDraft, rating },
       {
         onSuccess: () => {
           clearDraft(imdbId);
@@ -58,20 +56,14 @@ export default function ReviewForm({ imdbId }: Props) {
       aria-label="เขียนรีวิว"
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <label className="form-control w-full sm:max-w-xs">
-          <span className="mb-1 block text-xs font-semibold text-base-content/60">
-            ชื่อ
+        <div className="flex flex-col gap-1">
+          <span className="text-sm font-semibold text-base-content/60">
+            รีวิว
           </span>
-          <input
-            type="text"
-            value={authorName}
-            maxLength={AUTHOR_MAX_LENGTH}
-            onChange={(e) => setAuthorName(e.target.value)}
-            placeholder="เช่น I love Potatoes"
-            className="input input-sm w-full bg-base-100"
-            disabled={isPending}
-          />
-        </label>
+          <span className="text-sm font-semibold text-base-content">
+            {isLoadingReviews ? "…" : `ครั้งที่ ${reviewNumber}`}
+          </span>
+        </div>
 
         <div className="flex flex-col gap-1">
           <span className="text-xs font-semibold text-base-content/60">

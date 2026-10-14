@@ -95,7 +95,7 @@ function MovieDetailContent({ movie }: MovieDetailContentProps) {
           onClick={() => toggleWatchlist(movie.imdbID)}
           aria-pressed={inWatchlist}
         >
-          {inWatchlist ? "✓ อยู่ใน Watch list" : "+ เพิ่มใน Watch list"}
+          {inWatchlist ? "✓ อยู่ใน Watch list แล้ว" : "+ เพิ่มลงใน Watch list"}
         </button>
       </section>
 

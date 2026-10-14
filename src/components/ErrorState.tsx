@@ -15,9 +15,6 @@ export default function ErrorState({
       role="alert"
       className="flex flex-col items-center justify-center gap-4 py-16 text-center"
     >
-      <span className="text-5xl" aria-hidden="true">
-        🥔💥
-      </span>
       <div className="space-y-1">
         <p className="text-lg font-semibold text-base-content">
           โหลดข้อมูลไม่สำเร็จ
