@@ -1,23 +1,11 @@
 // src/lib/reviewsApi.ts
-//
-// OMDb has no review endpoint, so reviews go through this small REST-style client.
-// The "server" is a persisted, async mock (latency + validation + errors) so the app
-// behaves like a real network resource: every call returns a Promise and can fail.
-// To use a real backend, replace the bodies of the three exported functions with fetch()
-// calls — the hooks and UI do not need to change.
-import type {
-  CreateReviewInput,
-  Review,
-  ReviewList,
-  ToggleLikeInput,
-} from "../types/review";
+import type { CreateReviewInput, Review, ReviewList } from "../types/review";
 
 const DB_KEY = "fresh-potatoes-reviews-db-v1";
 const MIN_DELAY_MS = 350;
 const MAX_DELAY_MS = 750;
 
 export const REVIEW_MAX_LENGTH = 500;
-export const AUTHOR_MAX_LENGTH = 30;
 
 function delay(): Promise<void> {
   const ms = MIN_DELAY_MS + Math.random() * (MAX_DELAY_MS - MIN_DELAY_MS);
@@ -33,7 +21,6 @@ function isReview(value: unknown): value is Review {
     typeof v.author === "string" &&
     typeof v.content === "string" &&
     typeof v.rating === "number" &&
-    typeof v.likes === "number" &&
     typeof v.createdAt === "string"
   );
 }
@@ -95,25 +82,8 @@ export async function createReview(input: CreateReviewInput): Promise<Review> {
     author: `ครั้งที่ ${attempt}`,
     content,
     rating: Math.min(5, Math.max(0, Math.round(input.rating))),
-    likes: 0,
     createdAt: new Date().toISOString(),
   };
   writeDb([...db, review]);
   return review;
-}
-
-export async function toggleReviewLike({
-  reviewId,
-  liked,
-}: ToggleLikeInput): Promise<Review> {
-  await delay();
-  const db = readDb();
-  const target = db.find((r) => r.id === reviewId);
-  if (!target) throw new Error("ไม่พบรีวิวนี้");
-  const updated: Review = {
-    ...target,
-    likes: Math.max(0, target.likes + (liked ? 1 : -1)),
-  };
-  writeDb(db.map((r) => (r.id === reviewId ? updated : r)));
-  return updated;
 }

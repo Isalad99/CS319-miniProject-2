@@ -2,7 +2,6 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import StarRating from "./StarRating";
 import { useCreateReview, useReviews } from "../hooks/useReviews";
 import { useReviewStore } from "../store/useReviewStore";
-import { useRatingStore } from "../store/useRatingStore";
 import { REVIEW_MAX_LENGTH } from "../lib/reviewsApi";
 
 interface Props {
@@ -13,13 +12,10 @@ export default function ReviewForm({ imdbId }: Props) {
   const draft = useReviewStore((s) => s.drafts[imdbId] ?? "");
   const setDraft = useReviewStore((s) => s.setDraft);
   const clearDraft = useReviewStore((s) => s.clearDraft);
-  const myRating = useRatingStore((s) => s.ratings[imdbId]?.userRating ?? 0);
 
-  // Local UI state: stars the user picks for *this* review (defaults to their own movie rating)
-  const [rating, setRating] = useState<number>(myRating);
+  const [rating, setRating] = useState<number>(0);
   const { mutate, isPending, isError, error, reset } = useCreateReview(imdbId);
 
-  // ครั้งที่เขียนรีวิวของหนังเรื่องนี้ = จำนวนรีวิวที่มีอยู่แล้ว + 1
   const { data: reviews, isLoading: isLoadingReviews } = useReviews(imdbId);
   const reviewNumber = (reviews?.length ?? 0) + 1;
 
@@ -33,7 +29,7 @@ export default function ReviewForm({ imdbId }: Props) {
       {
         onSuccess: () => {
           clearDraft(imdbId);
-          setRating(myRating);
+          setRating(0);
         },
       },
     );
