@@ -7,6 +7,7 @@ import SearchPage from "./pages/SearchPage";
 import WatchlistPage from "./pages/WatchlistPage";
 import MyRatingsPage from "./pages/MyRatingsPage";
 import AboutPage from "./pages/AboutPage";
+import MyReviewDetailPage from "./pages/MyReviewDetailPage";
 
 export const router = createBrowserRouter([
   {
@@ -19,6 +20,8 @@ export const router = createBrowserRouter([
       { path: "watchlist", element: <WatchlistPage /> },
       { path: "my-ratings", element: <MyRatingsPage /> },
       { path: "about", element: <AboutPage /> },
+      { path: 'my-ratings', element: <MyRatingsPage /> },
+{ path: 'my-ratings/:id', element: <MyReviewDetailPage /> },
     ],
   },
 ]);

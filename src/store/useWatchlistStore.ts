@@ -1,49 +1,76 @@
-// src/store/useWatchlistStore.ts
-// Client state only: collection of imdbIds the user saved.
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-export interface WatchlistEntry {
-  addedAt: string // ISO 8601
+export interface WatchlistMovie {
+  imdbID: string
+  Title: string
+  Year: string
+  Poster: string
 }
 
-export interface WatchlistState {
-  watchlist: Record<string, WatchlistEntry>
+export interface WatchlistItem extends WatchlistMovie {
+  watched: boolean
+  addedAt: number
 }
 
-export interface WatchlistActions {
-  addToWatchlist: (imdbId: string) => void
-  removeFromWatchlist: (imdbId: string) => void
-  toggleWatchlist: (imdbId: string) => void
+interface WatchlistState {
+  watchlist: Record<string, WatchlistItem>
+  toggleWatchlist: (movie: WatchlistMovie) => void
+  removeFromWatchlist: (imdbID: string) => void
+  toggleWatched: (imdbID: string) => void
+  setWatched: (movie: WatchlistMovie, watched: boolean) => void
 }
 
-export type WatchlistStore = WatchlistState & WatchlistActions
-
-export const useWatchlistStore = create<WatchlistStore>()(
+export const useWatchlistStore = create<WatchlistState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       watchlist: {},
 
-      addToWatchlist: (imdbId) =>
-        set((state) => ({
-          watchlist: {
-            ...state.watchlist,
-            [imdbId]: { addedAt: new Date().toISOString() },
-          },
-        })),
-
-      removeFromWatchlist: (imdbId) =>
+      toggleWatchlist: (movie) =>
         set((state) => {
-          const rest = { ...state.watchlist }
-          delete rest[imdbId]
+          if (movie.imdbID in state.watchlist) {
+            const { [movie.imdbID]: _removed, ...rest } = state.watchlist
+            return { watchlist: rest }
+          }
+          return {
+            watchlist: {
+              ...state.watchlist,
+              [movie.imdbID]: { ...movie, watched: false, addedAt: Date.now() },
+            },
+          }
+        }),
+
+      removeFromWatchlist: (imdbID) =>
+        set((state) => {
+          const { [imdbID]: _removed, ...rest } = state.watchlist
           return { watchlist: rest }
         }),
 
-      toggleWatchlist: (imdbId) => {
-        if (imdbId in get().watchlist) get().removeFromWatchlist(imdbId)
-        else get().addToWatchlist(imdbId)
+      toggleWatched: (imdbID) =>
+        set((state) => {
+          const item = state.watchlist[imdbID]
+          if (!item) return state
+          return {
+            watchlist: {
+              ...state.watchlist,
+              [imdbID]: { ...item, watched: !item.watched },
+            },
+          }
+        }),
+        setWatched: (movie, watched) =>
+  set((state) => {
+    const existing = state.watchlist[movie.imdbID]
+    return {
+      watchlist: {
+        ...state.watchlist,
+        [movie.imdbID]: existing
+          ? { ...existing, watched }
+          : { ...movie, watched, addedAt: Date.now() },
       },
+    }
+  }),
+        
     }),
-    { name: 'movie-watchlist-v2' }
-  )
+    { name: 'watchlist-storage' },
+  ),
 )

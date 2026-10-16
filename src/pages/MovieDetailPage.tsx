@@ -92,7 +92,14 @@ function MovieDetailContent({ movie }: MovieDetailContentProps) {
         <button
           type="button"
           className={`btn btn-sm ${inWatchlist ? "btn-secondary" : "btn-outline btn-secondary"}`}
-          onClick={() => toggleWatchlist(movie.imdbID)}
+          onClick={() =>
+                        toggleWatchlist({
+                          imdbID: movie.imdbID,
+                          Title: movie.Title,
+                          Year: movie.Year,
+                          Poster: poster,
+                        })
+                      }
           aria-pressed={inWatchlist}
         >
           {inWatchlist ? "✓ อยู่ใน Watch list แล้ว" : "+ เพิ่มลงใน Watch list"}
