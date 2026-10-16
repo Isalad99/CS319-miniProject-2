@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export interface WatchlistEntry {
-  addedAt: string; // ISO 8601
+  addedAt: string;
 }
 
 export interface WatchlistState {

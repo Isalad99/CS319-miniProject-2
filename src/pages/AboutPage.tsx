@@ -1,8 +1,8 @@
 // src/pages/AboutPage.tsx
 import { Link } from "react-router";
-import o_pic from "../assets/o2.webp";
-import boon_pic from "../assets/boon2.jpeg";
-import kong_pic from "../assets/kong2.webp";
+import oPic from "../assets/o2.webp";
+import boonPic from "../assets/boon2.jpeg";
+import kongPic from "../assets/kong2.webp";
 
 interface Member {
   name: string;
@@ -18,21 +18,21 @@ const members: Member[] = [
     nickname: "O",
     studentId: "1660700699",
     role: "Watch Lists และ My review",
-    avatar: o_pic,
+    avatar: oPic,
   },
   {
     name: "นพเชษฐ์ อ่ำกรด",
     nickname: "Boon",
     studentId: "1660707009",
     role: "Movie Detail และ About us",
-    avatar: boon_pic,
+    avatar: boonPic,
   },
   {
     name: "ภาคิน หนุนนาค",
     nickname: "Kong",
     studentId: "1660707207",
     role: " Home",
-    avatar: kong_pic,
+    avatar: kongPic,
   },
 ];
 
