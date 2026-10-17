@@ -1,37 +1,43 @@
-// src/components/StarRating.tsx
-import { useId } from 'react'
+import { StarIcon } from './icons'
 
-interface Props {
-  value: number // current rating (0 = no rating)
-  onChange?: (v: number) => void
-  readonly?: boolean
-  size?: 'sm' | 'md' | 'lg'
+interface StarRatingProps {
+  value: number
+  onChange?: (value: number) => void
+  size?: string
 }
 
-const SIZE_CLASS: Record<NonNullable<Props['size']>, string> = {
-  sm: 'rating-sm',
-  md: 'rating-md',
-  lg: 'rating-lg',
-}
-
-export default function StarRating({ value, onChange, readonly = false, size = 'sm' }: Props) {
-  const id = useId()
+export default function StarRating({ value, onChange, size = 'w-8 h-8' }: StarRatingProps) {
+  const readOnly = !onChange
 
   return (
-    <div className={`rating ${SIZE_CLASS[size]}`}>
-      {[1, 2, 3, 4, 5].map((star) => (
-        <input
-          key={star}
-          id={`${id}-star-${star}`}
-          type="radio"
-          name={`rating-${id}`}
-          className="mask mask-star-2 bg-warning"
-          checked={star === value}
-          onChange={() => onChange?.(star)}
-          disabled={readonly}
-          aria-label={`${star} star${star > 1 ? 's' : ''}`}
-        />
-      ))}
+    <div className="flex items-center gap-1" role={readOnly ? 'img' : 'group'} aria-label={`คะแนน ${value.toFixed(1)} จาก 5`}>
+      {[1, 2, 3, 4, 5].map((i) => {
+        const fill = Math.min(1, Math.max(0, value - (i - 1)))
+        return (
+          <span key={i} className={`relative inline-block ${size}`}>
+            <StarIcon className={`${size} absolute inset-0 text-base-content/20`} />
+            <span className="absolute inset-y-0 left-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
+              <StarIcon className={`${size} text-[#D4A70F]`} />
+            </span>
+            {onChange && (
+              <>
+                <button
+                  type="button"
+                  className="absolute left-0 top-0 h-full w-1/2"
+                  onClick={() => onChange(i - 0.5)}
+                  aria-label={`${i - 0.5} ดาว`}
+                />
+                <button
+                  type="button"
+                  className="absolute right-0 top-0 h-full w-1/2"
+                  onClick={() => onChange(i)}
+                  aria-label={`${i} ดาว`}
+                />
+              </>
+            )}
+          </span>
+        )
+      })}
     </div>
   )
 }

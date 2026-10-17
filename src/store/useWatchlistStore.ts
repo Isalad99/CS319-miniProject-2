@@ -20,18 +20,24 @@ export type WatchlistStore = WatchlistState & WatchlistActions;
 
 export const useWatchlistStore = create<WatchlistStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       watchlist: {},
 
-      addToWatchlist: (imdbId) =>
-        set((state) => ({
-          watchlist: {
-            ...state.watchlist,
-            [imdbId]: { addedAt: new Date().toISOString() },
-          },
-        })),
+      toggleWatchlist: (movie) =>
+        set((state) => {
+          if (movie.imdbID in state.watchlist) {
+            const { [movie.imdbID]: _removed, ...rest } = state.watchlist
+            return { watchlist: rest }
+          }
+          return {
+            watchlist: {
+              ...state.watchlist,
+              [movie.imdbID]: { ...movie, watched: false, addedAt: Date.now() },
+            },
+          }
+        }),
 
-      removeFromWatchlist: (imdbId) =>
+      removeFromWatchlist: (imdbID) =>
         set((state) => {
           const rest = { ...state.watchlist };
           delete rest[imdbId];
@@ -42,6 +48,9 @@ export const useWatchlistStore = create<WatchlistStore>()(
         if (imdbId in get().watchlist) get().removeFromWatchlist(imdbId);
         else get().addToWatchlist(imdbId);
       },
+    }
+  }),
+        
     }),
     { name: "movie-watchlist-v2" },
   ),
