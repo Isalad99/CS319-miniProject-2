@@ -84,9 +84,9 @@ function MovieDetailContent({ movie }: MovieDetailContentProps) {
         />
       </div>
 
-      {/* Actions: watchlist + my rating */}
+      {/* Actions: watchlist */}
       <section
-        aria-label="การให้คะแนนและรายการโปรด"
+        aria-label="รายการโปรด"
         className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8"
       >
         <button

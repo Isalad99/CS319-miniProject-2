@@ -6,20 +6,13 @@ export interface Review {
   author: string;
   content: string;
   rating: number;
-  likes: number;
-  createdAt: string; // ISO 8601
+  createdAt: string;
 }
 
 export interface CreateReviewInput {
   imdbId: string;
   content: string;
   rating: number;
-}
-
-export interface ToggleLikeInput {
-  reviewId: string;
-  imdbId: string;
-  liked: boolean;
 }
 
 export type ReviewList = Review[];
