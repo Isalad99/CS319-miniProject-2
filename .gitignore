@@ -25,5 +25,5 @@ Thumbs.db
 # TypeScript build info
 *.tsbuildinfo
 
-.implementation_plan.md
-.example_response_json.txt
+implementation_plan.md
+example_response_json.txt
