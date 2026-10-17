@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware'
 import type { WatchlistMovie } from './useWatchlistStore'
 
 export interface MyReview extends WatchlistMovie {
-  rating: number // 0.5 - 5 (ขั้นละ 0.5)
+  rating: number 
   text: string
   createdAt: number
   updatedAt: number

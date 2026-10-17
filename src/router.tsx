@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
       { path: "my-ratings", element: <MyRatingsPage /> },
       { path: "about", element: <AboutPage /> },
       { path: 'my-ratings', element: <MyRatingsPage /> },
-{ path: 'my-ratings/:id', element: <MyReviewDetailPage /> },
+      { path: 'my-ratings/:id', element: <MyReviewDetailPage /> },
     ],
   },
 ]);

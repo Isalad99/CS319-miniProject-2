@@ -25,7 +25,7 @@ export default function WatchlistPage() {
           </Link>
         </div>
       ) : (
-        <ul className="flex flex-wrap gap-4 sm:gap-6">
+        <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {items.map((item) => (
             <WatchlistCard key={item.imdbID} item={item} />
           ))}

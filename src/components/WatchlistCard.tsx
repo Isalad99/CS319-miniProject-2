@@ -31,7 +31,7 @@ export default function WatchlistCard({ item }: { item: WatchlistItem }) {
   const removeFromWatchlist = useWatchlistStore((s) => s.removeFromWatchlist)
 
   return (
-    <li className="w-40 sm:w-44 rounded-xl bg-accent p-2 shadow-sm">
+    <li className="rounded-xl bg-accent p-2 shadow-sm">
       <Link to={`/movie/${item.imdbID}`} className="block">
         <img
           src={item.Poster}

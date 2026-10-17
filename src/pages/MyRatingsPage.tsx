@@ -50,15 +50,15 @@ export default function MyReviewPage() {
             No watched or reviewed movies yet. Go to Watch list to mark movies as watched or write reviews.
           </p>
           <Link to="/watchlist" className="btn btn-sm btn-secondary">
-            ไปที่ Watch list
+            Go to Watch list
           </Link>
         </div>
       ) : (
-        <ul className="flex flex-wrap gap-4 sm:gap-6">
+        <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {entries.map(({ movie, watched, reviewed }) => {
             const reviewPath = `/my-ratings/${movie.imdbID}`
             return (
-              <li key={movie.imdbID} className="w-40 sm:w-44 rounded-xl bg-accent p-2 shadow-sm">
+              <li key={movie.imdbID} className="rounded-xl bg-accent p-2 shadow-sm">
                 <Link to={reviewPath} className="block">
                   <img
                     src={movie.Poster}
