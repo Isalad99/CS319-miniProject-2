@@ -3,7 +3,6 @@ import { useMovie } from "../hooks/useMovie";
 import { useWatchlistStore } from "../store/useWatchlistStore";
 import ErrorState from "../components/ErrorState";
 import MovieDetailSkeleton from "../components/MovieDetailSkeleton";
-import ReviewSection from "../components/ReviewSection";
 import type { OmdbMovieDetail } from "../types/movie";
 
 const NO_POSTER = "https://placehold.co/400x600/B0BA99/3D1F0E?text=No+Poster";
@@ -93,13 +92,13 @@ function MovieDetailContent({ movie }: MovieDetailContentProps) {
           type="button"
           className={`btn btn-sm ${inWatchlist ? "btn-secondary" : "btn-outline btn-secondary"}`}
           onClick={() =>
-                        toggleWatchlist({
-                          imdbID: movie.imdbID,
-                          Title: movie.Title,
-                          Year: movie.Year,
-                          Poster: poster,
-                        })
-                      }
+            toggleWatchlist({
+              imdbID: movie.imdbID,
+              Title: movie.Title,
+              Year: movie.Year,
+              Poster: poster,
+            })
+          }
           aria-pressed={inWatchlist}
         >
           {inWatchlist ? "✓ อยู่ใน Watch list แล้ว" : "+ เพิ่มลงใน Watch list"}
@@ -158,9 +157,6 @@ function MovieDetailContent({ movie }: MovieDetailContentProps) {
           />
         </dl>
       </section>
-
-      {/* User reviews */}
-      <ReviewSection imdbId={movie.imdbID} />
     </article>
   );
 }
